@@ -1,10 +1,23 @@
+let s1 = [{"code" : "EN.500.112", "title" : "Gateway Computing: JAVA", "credits" : 3, "areas" : "E"}, {"code" : "EN.601.104", "title" : "Computer Ethics", "credits" : 1, "areas" : "H"}];
+let s2 = [{"code" : "EN.601.220", "title" : "Intermediate Programming", "credits" : 4, "areas" : "E"}];
+let s3 = [{"code" : "EN.601.226", "title" : "Data Structures", "credits" : 4, "areas" : "E"},{"code" : "EN.601.229", "title" : "Computer System Fundamentals", "credits" : 3, "areas" : "E"}];
+let s4 = [{"code" : "EN.601.230", "title" : "Mathematical Foundations for CS", "credits" : 4, "areas" : "Q"}];
+let s5 = [{"code" : "EN.601.433", "title" : "Intro to Algorithms", "credits" : 3, "areas" : "E"}];
+let s6 = [];
+let s7 = [];
+let s8 = [];
+let semesters = [];
+let sugg = [{"code" : "EN.601.270", "title" : "Full Stack JavaScript", "credits" : 3, "areas" : "E"}, {"code" : "EN.601.290", "title" : "User Interfaces & Mobile Apps", "credits" : 3, "areas" : "E"}, {"code" : "EN.601.318", "title" : "Operating Systems", "credits" : 3, "areas" : "E"}, {"code" : "EN.553.310", "title" : "Probability & Statistics for Physical Sciences & engineering", "credits" : 4, "areas" : "Q"},
+{"code" : "EN.601.421", "title" : "Object Oriented Software Engineering", "credits" : 3, "areas" : "E"}, {"code" : "AS.110.201", "title" : "Linear Algebra", "credits" : 4, "areas" : "Q"}, {"code" : "EN.601.482", "title" : "Machine Learning: Deep Learning", "credits" : 3, "areas" : "E"}];
+// calculate semester's new credit total & total credit total
+// assigns color based on areas, also checks major req based on areas
+
 function allowDrop(ev) {
     ev.preventDefault();
 }
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
-
     // use parent to get div id
     // var id = $(this).closest('div.pane').attr('id');
     // console.log(id);
@@ -16,105 +29,74 @@ function drag(ev) {
     // }
 }
 
-function drop(ev, sem) {
+function drop(ev) {
     ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    console.log("data :" + data);
-    ev.target.appendChild(document.getElementById(data));
+    var courseCode = ev.dataTransfer.getData("text");
+    var sem = ev.target.id;
+    //ev.target.appendChild(document.getElementById(data));
 
-    // document.getElementById(data).style.backgroundColor = color(document.getElementById(data).areas);
+    let courseInfo = deleteCourse(courseCode);
+    addCourse(sem.charAt(1), courseInfo.code, courseInfo.title, courseInfo.credits, courseInfo.areas);
 
-    // for (let i = 0; i < 8; i++) {
-    //     for (let j = 0; j < sem.length; j++) {
-    //         if (sem[i].code == ev.target.id) {
-    //             sem.pop(sem[i]);
-    //         }
-    //     }
-    // }
-
-    // switch(sem) {
-    //     case("fall1") : fall1.push(data); break;
-    //     case("spring1") : spring1.push(data); break;
-    //     case("fall2") : fall2.push(data); break;
-    //     case("spring2") : spring2.push(data); break;
-    //     case("fall3") : fall3.push(data); break;
-    //     case("spring3") : spring3.push(data); break;
-    //     case("fall4") : fall4.push(data); break;
-    //     case("spring4") : spring4.push(data); break;
-    // }
-
-    // console.log(fall1);
-    // console.log(fall2);
-    // move course to dictionary object respective to semester
-    // add to new object, remove from old object
-    // calculate semester's new credit total
-    // if semester's new credit total > allowance based on ksas / wse, display warning
+    for (let i = 1; i < 9; i++) { // update all credits
+      document.getElementById("cs"+i).innerHTML = calculateCredits(getSemArray(i)) + " credits";
+    }
+    document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
 }
 
-let fall1 = [{"code" : "EN500112", "title" : "Gateway Computing: JAVA", "credits" : 3, "areas" : "E", "sem" : "fall1"}, {"code" : "EN601104", "title" : "Computer Ethics", "credits" : 1, "areas" : "H", "sem" : "fall1"}];
-let spring1 = [{"code" : "EN601220", "title" : "Intermediate Programming", "credits" : 4, "areas" : "E", "sem" : "spring1"}];
-let fall2 = [{"code" : "EN601226", "title" : "Data Structures", "credits" : 4, "areas" : "E", "sem" : "fall2"},{"code" : "EN601230", "title" : "Mathematical Foundations for CS", "credits" : 4, "areas" : "Q", "sem" : "spring2"}];
-let spring2 = [{"code" : "EN601229", "title" : "Computer System Fundamentals", "credits" : 3, "areas" : "E", "sem" : "fall3"}];
-let fall3 = [{"code" : "EN601443", "title" : "Intro to Algorithms", "credits" : 3, "areas" : "E", "sem" : "fall4"}];
-let spring3 = [];
-let fall4 = [];
-let spring4 = [];
 
-// calculate semester's new credit total & total credit total
-// assigns color based on areas, also checks major req based on areas
-
-function addCourse(code, title, credits, areas) {
+function addCourse(semnum, code, title, credits, areas) {
     let digit = parseInt(code.substring(code.length - 3));
-
-    let obj;
-    let year;
     let sem;
 
-    let codeid = code.substring(0, 2) + code.substring(3, 6) + code.substring(7);
-
-    if (digit < 200) {
-        // freshman
-        year = 1;
-        obj = {"code" : code, "title" : title, "credits" : credits, "areas" : areas, "sem" : "fall1"};
-        fall1.push(obj);
-        document.getElementById("cfall1").innerHTML = calculateCredits(fall1) + " credits";
-    } else if (digit < 300) {
-        // sophomore
-        year = 2;
-        obj = {"code" : code, "title" : title, "credits" : credits, "areas" : areas, "sem" : "fall2"};
-        fall2.push(obj);
-        document.getElementById("cfall2").innerHTML = calculateCredits(fall2) + " credits";
-    } else if (digit < 400) {
-        // junior
-        year = 3;
-        obj = {"code" : code, "title" : title, "credits" : credits, "areas" : areas, "sem" : "fall3"};
-        fall3.push(obj);
-        document.getElementById("cfall3").innerHTML = calculateCredits(fall3) + " credits";
-    } else {
-        // senior
-        year = 4;
-        obj = {"code" : code, "title" : title, "credits" : credits, "areas" : areas, "sem" : "fall4"};
-        fall4.push(obj);
-        document.getElementById("cfall4").innerHTML = calculateCredits(fall4) + " credits";
+    if (semnum > 0) { // in case of drag & drop, semnum is known
+      sem = semnum;
+    }
+    else { // determine suitable year for new course
+      if (digit < 200) {
+          sem = 1; // freshman
+      } else if (digit < 300) {
+          sem = 3; // sophomore
+      } else if (digit < 400) {
+          sem = 5; // junior
+      } else {
+          sem = 7; // senior
+      }
     }
 
-    document.getElementById("fall" + year).innerHTML +=
-            `<div class="card drag" id="${codeid}" draggable="true" ondragstart="drag(event)">
-                <button class="delete is-small" onclick="deleteCourse(\'${codeid}\');" style="display: none;"></button>
+    let obj = {"code" : code, "title" : title, "credits" : credits, "areas" : areas};
+    getSemArray(sem).push(obj);
+
+    document.getElementById("cs"+sem).innerHTML = calculateCredits(getSemArray(sem)) + " credits";
+
+    document.getElementById('s'+sem).innerHTML +=
+            `<div class="card drag" id="${code}" draggable="true" ondragstart="drag(event)" style="background-color: ${color(areas)};">
+                <button class="delete is-small" onclick="deleteCourse('${code}');"></button>
                 <div class="card-content">
                     ${code}<br>
                     ${title} (${credits})
                 </div>
             </div>`;
-    
-    document.getElementById(codeid).style.backgroundColor = color(areas);
-    document.getElementById("filter-records").innerHTML = '';
-    document.getElementById("txt-search").value = '';
+
+    document.getElementById("filter-records").innerHTML = ''; // close search results
+    document.getElementById("txt-search").value = ''; // remove search keywords
+    document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
+}
+
+function getSemArray(int) {
+    if (int == 1) return s1;
+    if (int == 2) return s2;
+    if (int == 3) return s3;
+    if (int == 4) return s4;
+    if (int == 5) return s5;
+    if (int == 6) return s6;
+    if (int == 7) return s7;
+    if (int == 8) return s8;
 }
 
 function calculateCredits(sem) {
     let sum = 0;
-    for (i = 0; i < sem.length; i++) {
+    for (let i = 0; i < sem.length; i++) {
         sum += parseInt(sem[i].credits);
     }
     return sum;
@@ -125,7 +107,7 @@ function color(areas) {
     for (let i=0; i < areas.length; i++){
        array.push(areas.charAt(i));
     }
-    
+
     let r = 0;
     let g = 0;
     let b = 0;
@@ -189,17 +171,33 @@ function color(areas) {
     return color;
 }
 
-function deleteCourse(id) {
-    console.log(id);
-    document.getElementById(id).style.display = "none";
-
+function deleteCourse(code) {
+    document.getElementById(code).remove(); // delete course div
+    let sem = 1;
+    let courseInfo;
+    // identify which semester contains course + remove
+    semesters = [s1, s2, s3, s4, s5, s6, s7, s8, sugg];
+    for (let i=0; i < semesters.length; i++) {
+      for (let j=0; j < semesters[i].length; j++) {
+        if (semesters[i][j].code == code) {
+          courseInfo = semesters[i][j];
+          semesters[i].splice(j,1); // remove from respective array
+          sem += i;
+          break;
+        }
+      }
+    }
+    semesters = [s1, s2, s3, s4, s5, s6, s7, s8];
+    if (sem < 9) document.getElementById("cs" + sem).innerHTML = calculateCredits(getSemArray(sem)) + " credits";
+    document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
+    return courseInfo; // return deleted course info
     // remove from respective array
     // recalculate credits
 }
 
 function getCreditsTotal() {
     let sum = 0;
-    sum += calculateCredits(fall1) + calculateCredits(spring1) + calculateCredits(fall2) + calculateCredits(spring2) + 
-      calculateCredits(fall3) + calculateCredits(spring3) + calculateCredits(fall4) + calculateCredits(fall4);
-    return sum;
+    sum += calculateCredits(s1) + calculateCredits(s2) + calculateCredits(s3) + calculateCredits(s4) +
+      calculateCredits(s5) + calculateCredits(s6) + calculateCredits(s7) + calculateCredits(s8);
+    return sum.toFixed(1); // 1 dec pt
 }
