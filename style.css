@@ -13,9 +13,10 @@ nav {
 }
 
 #searchbar {
-    width: 750px !important;
+    width: 940px !important;
     padding-top: 10px;
     padding-left: 150px;
+    padding-right: 150px;
 }
 
 .sem {
