@@ -1,14 +1,15 @@
 import json
 
-x = json.load(open('/Users/minspk/Desktop/gc112/classes.json'))
+courseJSON = json.load(open('/Users/minspk/Desktop/gc112/classes.json'))
 
-y = "["
+shortJSON = "["
 
-for i in range(len(x)):
-    if x[i]["SectionName"] == "01":
-        y += '{\"Title\":\"' + x[i]["Title"] + "\","
-        y += '\"OfferingName\":\"' + x[i]["OfferingName"] + "\","
-        y += '\"Credits\":\"' + x[i]["Credits"] + "\"},"
-y += "]"
+for i in range(len(courseJSON)):
+    if x[i]["SectionName"] == "01": 
+        shortJSON += '{\"code\":\"' + courseJSON[i]["OfferingName"] + "\","
+        shortJSON += '\"title\":\"' + courseJSONx[i]["Title"] + "\","
+        shortJSON += '\"areas\":\"' + courseJSON[i]["Areas"] + "\","
+        shortJSON += '\"credits\":\"' + courseJSON[i]["Credits"] + "\"},"
+shortJSON += "]"
 
-print(y)
+print(shortJSON)
