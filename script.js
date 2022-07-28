@@ -66,10 +66,6 @@ function getSemArray(int) {
 
 // add a course card to semester container with id=s<semNum>
 function addCourse(semNum, code, title, credits, areas) {
-  // push new course to semester array
-  let newCourse = { code: code, title: title, credits: credits, areas: areas };
-  getSemArray(sem).push(newCourse);
-
   // get course level e.g. EN.500.<312>
   let level = parseInt(code.substring(code.length - 3));
   let sem = semNum;       // if semNum != 0, sem is known from drag drop event 
@@ -92,6 +88,9 @@ function addCourse(semNum, code, title, credits, areas) {
       sem = 8;                  // senior spring
     }
   }
+  // push new course to semester array
+  let newCourse = { code: code, title: title, credits: credits, areas: areas };
+  getSemArray(sem).push(newCourse);
   // add course card to semester container
   document.getElementById("s" + sem).innerHTML += 
     `<div class="card drag" id="${code}" draggable="true" ondragstart="drag(event)" style="background-color: ${color(areas)};">

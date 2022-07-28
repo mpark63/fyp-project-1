@@ -1,4 +1,4 @@
 [submodule "cors-anywhere"] 
   path = cors-anywhere 
-  url = git://github.com/Rob--W/cors-anywhere.git
+  url = https://github.com/Rob--W/cors-anywhere.git
   branch = main
