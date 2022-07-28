@@ -1,40 +1,20 @@
 // declare array of courses by semester
 // initiated with default CS requirements
-let s1 = [
-  {
-    code: "EN.500.112",
-    title: "Gateway Computing: JAVA",
-    credits: 3,
-    areas: "E",
-  },
+let s1 = [          // freshman fall 
+  { code: "EN.500.112", title: "Gateway Computing: JAVA", credits: 3, areas: "E" },
   { code: "EN.601.104", title: "Computer Ethics", credits: 1, areas: "H" },
 ];
-let s2 = [
-  {
-    code: "EN.601.220",
-    title: "Intermediate Programming",
-    credits: 4,
-    areas: "E",
-  },
+let s2 = [          // freshman spring 
+  { code: "EN.601.220", title: "Intermediate Programming", credits: 4, areas: "E" },
 ];
-let s3 = [
+let s3 = [          // sophomore fall 
   { code: "EN.601.226", title: "Data Structures", credits: 4, areas: "E" },
-  {
-    code: "EN.601.229",
-    title: "Computer System Fundamentals",
-    credits: 3,
-    areas: "E",
-  },
+  { code: "EN.601.229", title: "Computer System Fundamentals", credits: 3, areas: "E" },
 ];
-let s4 = [
-  {
-    code: "EN.601.230",
-    title: "Mathematical Foundations for CS",
-    credits: 4,
-    areas: "Q",
-  },
+let s4 = [          // sophomore spring 
+  { code: "EN.601.230", title: "Mathematical Foundations for CS", credits: 4, areas: "Q" },
 ];
-let s5 = [
+let s5 = [          // junior fall 
   { code: "EN.601.433", title: "Intro to Algorithms", credits: 3, areas: "E" },
 ];
 let s6 = [];
@@ -42,69 +22,37 @@ let s7 = [];
 let s8 = [];
 // array of suggested courses
 let sugg = [
-  {
-    code: "EN.601.270",
-    title: "Full Stack JavaScript",
-    credits: 3,
-    areas: "E",
-  },
-  {
-    code: "EN.601.290",
-    title: "User Interfaces & Mobile Apps",
-    credits: 3,
-    areas: "E",
-  },
-  { code: "EN.601.318", title: "Operating Systems", credits: 3, areas: "E" },
-  {
-    code: "EN.553.310",
-    title: "Probability & Statistics for Physical Sciences & engineering",
-    credits: 4,
-    areas: "Q",
-  },
-  {
-    code: "EN.601.421",
-    title: "Object Oriented Software Engineering",
-    credits: 3,
-    areas: "E",
-  },
-  { code: "AS.110.201", title: "Linear Algebra", credits: 4, areas: "Q" },
-  {
-    code: "EN.601.482",
-    title: "Machine Learning: Deep Learning",
-    credits: 3,
-    areas: "E",
-  },
+    { "code" : "EN.601.270", "title" : "Full Stack JavaScript", "credits" : 3, "areas" : "E" }, 
+    { "code" : "EN.601.290", "title" : "User Interfaces & Mobile Apps", "credits" : 3, "areas" : "E" }, 
+    { "code" : "EN.601.318", "title" : "Operating Systems", "credits" : 3, "areas" : "E" }, 
+    { "code" : "EN.553.310", "title" : "Probability & Statistics for Physical Sciences & engineering", "credits" : 4, "areas" : "Q" },
+    { "code" : "EN.601.421", "title" : "Object Oriented Software Engineering", "credits" : 3, "areas" : "E" }, 
+    { "code" : "AS.110.201", "title" : "Linear Algebra", "credits" : 4, "areas" : "Q" }, 
+    { "code" : "EN.601.482", "title" : "Machine Learning: Deep Learning", "credits" : 3, "areas" : "E" }
 ];
-// declare an array of course arrays for later use
-let semesters = [];
 
+// allow drop to semseter container 
 function allowDrop(ev) {
   ev.preventDefault();
 }
 
-function drag(ev) {
+// allow drag to semester container 
+function drag(ev) {         // course code (e.g. EN.500.122)
   ev.dataTransfer.setData("text", ev.target.id);
 }
 
+// transfers a course from one semester to another in ondrop event 
 function drop(ev) {
   ev.preventDefault();
   var courseCode = ev.dataTransfer.getData("text");
-  var semNum = ev.target.id; // number n for nth semester s<n?>
+  var semNum = ev.target.id; // semester container div id (e.g. s1, s2)
 
-  // delete course at current array and add course to new array
-  let courseInfo = deleteCourse(courseCode);
-  addCourse(semNum.charAt(1), courseInfo);
-
-  // calculate semester's new credit total & total credit total
-  for (let i = 1; i < 9; i++) {
-    // update all credits
-    document.getElementById("cs" + i).innerHTML =
-      calculateCredits(getSemArray(i)) + " credits";
-  }
-  document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
+  // delete course at current sem and add to new sem
+  let courseInfo = deleteCourse(courseCode);        // returns course obj 
+  addCourse(semNum.charAt(1), courseInfo.code, courseInfo.title, courseInfo.credits, courseInfo.areas);          // add to dropped semester 
 }
 
-// returns the nth semester array given number n
+// returns the nth semester array for given n
 function getSemArray(int) {
   if (int == 1) return s1;
   if (int == 2) return s2;
@@ -116,86 +64,78 @@ function getSemArray(int) {
   if (int == 8) return s8;
 }
 
+// add a course card to semester container with id=s<semNum>
 function addCourse(semNum, code, title, credits, areas) {
-  // get course level e.g. EN.XXX
-  let level = parseInt(code.substring(code.length - 3));
-  let sem;
-
-  if (semNum > 0) {
-    // in case of drag & drop, semNum is known
-    sem = semNum;
-  } else {
-    // determine suitable year for new course
-    if (level < 150) {
-      sem = 1; // freshman fall
-    } else if (level < 200) {
-      sem = 2; // freshman spring
-    } else if (level < 250) {
-      sem = 3; // sophomore fall
-    } else if (level < 300) {
-      sem = 4; // sophomore spring
-    } else if (level < 350) {
-      sem = 5; // junior fall
-    } else if (level < 400) {
-      sem = 6; // junior spring
-    } else if (level < 450) {
-      sem = 7; // senior fall
-    } else {
-      // level >= 450
-      sem = 8; // senior spring
-    }
-  }
-
   // push new course to semester array
   let newCourse = { code: code, title: title, credits: credits, areas: areas };
   getSemArray(sem).push(newCourse);
 
-  // add course box to planner container
-  document.getElementById(
-    "s" + sem
-  ).innerHTML += `<div class="card drag" id="${code}" draggable="true" ondragstart="drag(event)" style="background-color: ${color(
-    areas
-  )};">
-                <button class="delete is-small" onclick="deleteCourse('${code}');"></button>
-                <div class="card-content">
-                    ${code}<br>
-                    ${title} (${credits})
-                </div>
-            </div>`;
-
+  // get course level e.g. EN.500.<312>
+  let level = parseInt(code.substring(code.length - 3));
+  let sem = semNum;       // if semNum != 0, sem is known from drag drop event 
+  if (semNum == 0) {      // if new course, determine suitable year for new course
+    if (level < 150) {
+      sem = 1;                  // freshman fall
+    } else if (level < 200) {
+      sem = 2;                  // freshman spring
+    } else if (level < 250) {
+      sem = 3;                  // sophomore fall
+    } else if (level < 300) {
+      sem = 4;                  // sophomore spring
+    } else if (level < 350) {
+      sem = 5;                  // junior fall
+    } else if (level < 400) {
+      sem = 6;                  // junior spring
+    } else if (level < 450) {
+      sem = 7;                  // senior fall
+    } else {              
+      sem = 8;                  // senior spring
+    }
+  }
+  // add course card to semester container
+  document.getElementById("s" + sem).innerHTML += 
+    `<div class="card drag" id="${code}" draggable="true" ondragstart="drag(event)" style="background-color: ${color(areas)};">
+        <button class="delete is-small" onclick="deleteCourse('${code}');"></button>
+        <div class="card-content">
+            ${code}<br>
+            ${title} (${credits})
+        </div>
+    </div>`;
   // clean up navigation bar
   document.getElementById("filter-records").innerHTML = ""; // close search results
-  document.getElementById("txt-search").value = ""; // remove search keywords
-  // update semester credit count and total credit count
-  document.getElementById("cs" + sem).innerHTML =
-    calculateCredits(getSemArray(sem)) + " credits";
-  document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
+  document.getElementById("txt-search").value = ""; // clear search field
+  // recalculate credits for all semesters and total 
+  for (let i = 1; i < 9; i++) {
+    // update all credits <p> element 
+    document.getElementById("cs" + i).innerHTML = getSemesterCredits(getSemArray(i)) + " credits";
+  }
+  document.getElementById("total").innerHTML = getTotalCredits() + " credits";
 }
 
+// delete a course card from its semester container 
 function deleteCourse(code) {
   // delete course div from container
   document.getElementById(code).remove();
-
   // identify which semester contains course + remove from respective array
   let sem = 1;
   let courseInfo;
-  semesters = [s1, s2, s3, s4, s5, s6, s7, s8, sugg];
+  let semesters = [s1, s2, s3, s4, s5, s6, s7, s8, sugg];
+  // iterate through every course in semesters array 
   for (let i = 0; i < semesters.length; i++) {
     for (let j = 0; j < semesters[i].length; j++) {
       if (semesters[i][j].code == code) {
         courseInfo = semesters[i][j];
         semesters[i].splice(j, 1); // remove from respective array
-        sem += i; // found semNum
+        sem += i; // found semester number 
         break;
       }
     }
   }
-
   // update semester credit count and total credit count
-  if (sem < 9)
-    document.getElementById("cs" + sem).innerHTML =
-      calculateCredits(getSemArray(sem)) + " credits";
-  document.getElementById("total").innerHTML = getCreditsTotal() + " credits";
+  if (sem < 9) {
+    document.getElementById("cs" + sem).innerHTML = getSemesterCredits(getSemArray(sem)) + " credits";
+    document.getElementById("total").innerHTML = getTotalCredits() + " credits";
+  }
   // return deleted course info
   return courseInfo;
 }
@@ -205,7 +145,6 @@ function color(areas) {
   let r = 0;
   let g = 0;
   let b = 0;
-
   if (areas.includes("H")) {
     // humanities - red
     r = 249;
@@ -266,8 +205,8 @@ function color(areas) {
   return color;
 }
 
-// calculate number of credits given semester
-function calculateCredits(sem) {
+// calculate and return number of credits given semester
+function getSemesterCredits(sem) {
   let sum = 0;
   for (let i = 0; i < sem.length; i++) {
     sum += parseInt(sem[i].credits);
@@ -275,108 +214,94 @@ function calculateCredits(sem) {
   return sum;
 }
 
-function getCreditsTotal() {
+// calculate and return total credits 
+function getTotalCredits() {
   let sum =
-    calculateCredits(s1) +
-    calculateCredits(s2) +
-    calculateCredits(s3) +
-    calculateCredits(s4) +
-    calculateCredits(s5) +
-    calculateCredits(s6) +
-    calculateCredits(s7) +
-    calculateCredits(s8);
+    getSemesterCredits(s1) +
+    getSemesterCredits(s2) +
+    getSemesterCredits(s3) +
+    getSemesterCredits(s4) +
+    getSemesterCredits(s5) +
+    getSemesterCredits(s6) +
+    getSemesterCredits(s7) +
+    getSemesterCredits(s8);
   return sum.toFixed(1); // 1 decimal pt
 }
 
+// save snapshot of semesters container as pdf 
 function download() {
   var elementHTML = document.getElementById("container");
 
   html2canvas(elementHTML, {
     useCORS: true,
     onrendered: function (canvas) {
-      // landscape letter document
+      // format as landscape letter document
       var pdf = new jsPDF("l", "pt", "letter");
       var pageHeight = 1200;
       var pageWidth = 1500;
       var srcImg = canvas;
 
+      // create canvas on document 
       window.onePageCanvas = document.createElement("canvas");
       onePageCanvas.setAttribute("width", pageWidth);
       onePageCanvas.setAttribute("height", pageHeight);
       var context = onePageCanvas.getContext("2d");
-      context.drawImage(
-        srcImg,
-        0,
-        0,
-        pageWidth,
-        pageHeight,
-        0,
-        0,
-        pageWidth,
-        pageHeight
-      );
+      context.drawImage(srcImg, 0, 0, pageWidth, pageHeight, 0, 0, pageWidth, pageHeight);
       var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
-      pdf.addImage(
-        canvasDataURL,
-        "PNG",
-        50,
-        0,
-        pageWidth * 0.5,
-        pageHeight * 0.5
-      );
-
-      // Save the PDF
+      // add site image to canvas  
+      pdf.addImage(canvasDataURL, "PNG", 50, 0, pageWidth * 0.5, pageHeight * 0.5);
+      // prompt pdf download 
       pdf.save("document.pdf");
     },
   });
 }
 
-function required() {
+// 
+function getDegreeProgress() {
   // intial credit distribution
-  let nCredits = 0;
+  let nCredits = 0;     // natural  
   let nDone = false;
-  let qCredits = 0;
+  let qCredits = 0;     // quantitative
   let qDone = false;
-  let hCredits = 0;
+  let hCredits = 0;     // humanities
   let hDone = false;
-  let sCredits = 0;
+  let sCredits = 0;     // social
   let sDone = false;
-  let totalCredits = getCreditsTotal();
+  let totalCredits = getTotalCredits();
 
   // assuming student is here 8 semesters
   let semesters = [s1, s2, s3, s4, s5, s6, s7, s8];
 
+  // for each course in a semester 
   for (let i = 0; i < semesters.length; i++) {
-    let sem = semesters[i]; // for each semester
+    let sem = semesters[i]; 
     for (let j = 0; j < sem.length; j++) {
-      // for each course
-      let areas = sem[j].areas; // for area e.g. 'H' or "NS"
-      for (let k = 0; k < areas.length; k++) {
-        switch (areas.charAt(k)) {
-          case "N":
-            nCredits += parseInt(sem[j].credits);
+      let course = sem[j]; 
+      // parse areas string e.g. 'H' or "NS"
+      for (let k = 0; k < course.areas.length; k++) {
+        switch (course.areas.charAt(k)) {
+          case "N": 
+            nCredits += parseInt(course.credits);
             break;
           case "Q":
-            qCredits += parseInt(sem[j].credits);
+            qCredits += parseInt(course.credits);
             break;
           case "H":
-            hCredits += parseInt(sem[j].credits);
+            hCredits += parseInt(course.credits);
             break;
           case "S":
-            sCredits += parseInt(sem[j].credits);
+            sCredits += parseInt(course.credits);
             break;
         }
       }
     }
   }
-
   // check if distribution requirements met
   if (nCredits >= 8) nDone = true;
   if (qCredits >= 16) qDone = true;
   if (hCredits >= 9) hDone = true;
   if (sCredits >= 9) sDone = true;
-  let canGraduate = nDone && qDone && hDone && sDone && totalCredits >= 120;
-
+  let canGraduate = nDone && qDone && hDone && sDone && (totalCredits >= 120);
   // message to output
   let message =
     "Your credits:\n\nBasic Sciences:  " +
@@ -390,7 +315,6 @@ function required() {
     " / 9\nTotal:  " +
     totalCredits +
     " / 120\n\n";
-
   if (canGraduate) {
     message += "Congratulations, you've fulfilled your degere requirements!\n";
   } else {
@@ -402,6 +326,6 @@ function required() {
     if (totalCredits < 120)
       message += 120 - totalCredits + " more credits overall\n";
   }
-
+  // display degree progress message 
   alert(message);
 }

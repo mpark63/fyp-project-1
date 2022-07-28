@@ -14,11 +14,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   </head>
   <body>
+    <!-- NAV BAR -->
     <nav class="navbar is-fixed-top" aria-label="main navigation">
       <div class="navbar-brand">
         <h3 class="title is-3 fyp">Four Year Plan</h3>
       </div>
       <div class="field is-grouped">
+        <!-- SEARCH BAR AND RESULTS -->
         <form>
           <div class="form-group">
             <p class="control is-expanded" id="searchbar">
@@ -34,17 +36,21 @@
           </div>
         </form>
       </div>
+      <!-- LOGIN AND SAVE BUTTONS -->
       <div style="margin-top: 8px">
         <button class="button is-info">Log in</button>
         <button class="button is-info" onclick="download()">Download</button>
       </div>
     </nav>
+    <!-- SEMESTERS CONTAINER -->
     <div class="container" id="container">
       <br /><br /><br />
+      <!-- FRESHMAN COLUMNS -->
       <div class="columns is-vcentered">
         <div class="column">
           <h4 class="title is-4">Freshman</h4>
           <h5 class="subtitle is-5">Fall</h5>
+          <!-- COURSES CONTAINER FOR FALL -->
           <div
             class="card sem"
             id="s1"
@@ -92,6 +98,7 @@
             </footer>
           </div>
           <br />
+          <!-- COURSES CONTAINER FOR SPRING -->
           <h5 class="subtitle is-5">Spring</h5>
           <div
             class="card sem"
@@ -123,8 +130,10 @@
             </footer>
           </div>
         </div>
+        <!-- SOPHOMORE COLUMNS -->
         <div class="column">
           <h4 class="title is-4">Sophomore</h4>
+          <!-- COURSES CONTAINER FOR FALL -->
           <h5 class="subtitle is-5">Fall</h5>
           <div
             class="card sem"
@@ -173,6 +182,7 @@
             </footer>
           </div>
           <br />
+          <!-- COURSES CONTAINER FOR SPRING -->
           <h5 class="subtitle is-5">Spring</h5>
           <div
             class="card sem"
@@ -204,8 +214,10 @@
             </footer>
           </div>
         </div>
+        <!-- JUNIOR COLUMNS -->
         <div class="column">
           <h4 class="title is-4">Junior</h4>
+          <!-- COURSES CONTAINER FOR FALL -->
           <h5 class="subtitle is-5">Fall</h5>
           <div
             class="card sem"
@@ -237,6 +249,7 @@
             </footer>
           </div>
           <br />
+          <!-- COURSES CONTAINER FOR SPRING -->
           <h5 class="subtitle is-5">Spring</h5>
           <div
             class="card sem"
@@ -250,8 +263,10 @@
             </footer>
           </div>
         </div>
+        <!-- SENIOR COLUMNS -->
         <div class="column">
           <h4 class="title is-4">Senior</h4>
+          <!-- COURSES CONTAINER FOR FALL -->
           <h5 class="subtitle is-5">Fall</h5>
           <div
             class="card sem"
@@ -265,6 +280,7 @@
             </footer>
           </div>
           <br />
+          <!-- COURSES CONTAINER FOR SPRING -->
           <h5 class="subtitle is-5">Spring</h5>
           <div
             class="card sem"
@@ -279,9 +295,11 @@
           </div>
         </div>
       </div>
-      <button class="button is-info" style="float: right" onclick="required()">
+      <!-- WHAT IF BUTTON -->
+      <button class="button is-info" style="float: right" onclick="getDegreeProgress()">
         <strong>What If?</strong>
       </button>
+      <!-- TOTAL CREDITS COUNT -->
       <h4
         class="title is-4"
         id="total"
@@ -290,6 +308,7 @@
         22.0 credits
       </h4>
       <br /><br /><br />
+    <!-- SUGGESTIONS CONTAINER -->
     </div>
     <h4 class="title is-4" style="margin-left: 40%">
       Courses Suggested For You
@@ -411,6 +430,7 @@
       </div>
     </div>
 
+    <!-- SCRIPT FOR DISPLAYING SEARCH RESULTS -->
     <script>
       // array of all courses
       // each course has the code, title, area, and credits
